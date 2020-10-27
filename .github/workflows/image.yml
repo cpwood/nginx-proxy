@@ -27,5 +27,5 @@ jobs:
             --push \
             --file Dockerfile \
             --tag ${{ env.IMAGE }}:latest \
-            --tag ${{ env.IMAGE }}:${{ env.PRODUCT_VERSION }}.{{ $github.run_number }} \
+            --tag ${{ env.IMAGE }}:${{ env.PRODUCT_VERSION }}.${{ github.run_number }} \
             --platform linux/amd64,linux/arm/v7,linux/arm64 .
