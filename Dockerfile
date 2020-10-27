@@ -1,5 +1,6 @@
 FROM nginx:1.19.3
 LABEL maintainer="Jason Wilder mail@jasonwilder.com"
+ARG TARGETPLATFORM
 
 # Install wget and install/updates certificates
 RUN apt-get update \
@@ -15,7 +16,14 @@ RUN echo "daemon off;" >> /etc/nginx/nginx.conf \
  && sed -i 's/worker_processes  1/worker_processes  auto/' /etc/nginx/nginx.conf
 
 # Install Forego
-ADD https://github.com/jwilder/forego/releases/download/v0.16.1/forego /usr/local/bin/forego
+RUN if ["$TARGETPLATFORM" = "linux/amd64"] ; then wget -O forego.tgz https://bin.equinox.io/c/ekMN3bCZFUn/forego-stable-linux-amd64.tgz ; fi
+RUN if ["$TARGETPLATFORM" = "linux/arm/v7"] ; then wget -O forego.tgz https://bin.equinox.io/c/ekMN3bCZFUn/forego-stable-linux-arm.tgz ; fi
+RUN if ["$TARGETPLATFORM" = "linux/arm64"] ; then wget -O forego.tgz https://bin.equinox.io/c/ekMN3bCZFUn/forego-stable-linux-arm64.tgz ; fi
+
+RUN tar xvf forego.tgz -C /usr/local/bin && \
+	chmod u+x /usr/local/bin/forego
+
+# https://bin.equinox.io/c/ekMN3bCZFUn/forego-stable-linux-amd64.tgz
 RUN chmod u+x /usr/local/bin/forego
 
 ENV DOCKER_GEN_VERSION 0.7.4
