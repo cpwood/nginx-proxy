@@ -1,0 +1,31 @@
+name: build our image
+
+on:
+  push:
+    branches: master
+
+env:
+  IMAGE: cpwood/nginx-proxy
+  PRODUCT_VERSION: '1.0'
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: checkout code
+        uses: actions/checkout@v2
+      - name: install buildx
+        id: buildx
+        uses: crazy-max/ghaction-docker-buildx@v1
+        with:
+          version: latest
+      - name: login to docker hub
+        run: echo "${{ secrets.DOCKER_PASSWORD }}" | docker login -u cpwood --password-stdin
+      - name: build the image
+        run: |
+          docker buildx build \
+            --push \
+            --file Dockerfile \
+            --tag ${{ env.IMAGE }}:latest \
+            --tag ${{ env.IMAGE }}:${{ env.PRODUCT_VERSION }}.{{ $github.run_number }} \
+            --platform linux/amd64,linux/arm/v7,linux/arm64 .
