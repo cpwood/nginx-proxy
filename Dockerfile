@@ -17,7 +17,7 @@ RUN echo "daemon off;" >> /etc/nginx/nginx.conf \
 
 # Install Forego
 RUN if [ "$TARGETPLATFORM" = "linux/amd64" ] ; then wget -O forego.tgz https://bin.equinox.io/c/ekMN3bCZFUn/forego-stable-linux-amd64.tgz && tar xvf forego.tgz -C /usr/local/bin && chmod u+x /usr/local/bin/forego && rm forego.tgz ; else echo "Skipped" ; fi
-RUN if [ "$TARGETPLATFORM" = "linux/arm/v7" ] ; then wget -O forego.tgz https://bin.equinox.io/c/ekMN3bCZFUn/forego-stable-linux-arm.tgz && tar xvf forego.tgz -C /usr/local/bin && chmod u+x /usr/local/bin/foreg && rm forego.tgz ; else echo "Skipped" ; fi
+RUN if [ "$TARGETPLATFORM" = "linux/arm/v7" ] ; then wget -O forego.tgz https://bin.equinox.io/c/ekMN3bCZFUn/forego-stable-linux-arm.tgz && tar xvf forego.tgz -C /usr/local/bin && chmod u+x /usr/local/bin/forego && rm forego.tgz ; else echo "Skipped" ; fi
 RUN if [ "$TARGETPLATFORM" = "linux/arm64" ] ; then wget -O forego.tgz https://bin.equinox.io/c/ekMN3bCZFUn/forego-stable-linux-arm64.tgz && tar xvf forego.tgz -C /usr/local/bin && chmod u+x /usr/local/bin/forego && rm forego.tgz ; else echo "Skipped" ; fi
 
 # Install Docker Gen
