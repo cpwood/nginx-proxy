@@ -1,7 +1,6 @@
 FROM nginx:1.19.3
 LABEL maintainer="Jason Wilder mail@jasonwilder.com"
 ARG TARGETPLATFORM
-ENV PLATFORM=$TARGETPLATFORM
 
 # Install wget and install/updates certificates
 RUN apt-get update \
@@ -17,24 +16,38 @@ RUN echo "daemon off;" >> /etc/nginx/nginx.conf \
  && sed -i 's/worker_processes  1/worker_processes  auto/' /etc/nginx/nginx.conf
 
 # Install Forego
-RUN if ["$PLATFORM" = "linux/amd64"] ; then wget -O forego.tgz https://bin.equinox.io/c/ekMN3bCZFUn/forego-stable-linux-amd64.tgz ; fi
-RUN if ["$PLATFORM" = "linux/arm/v7"] ; then wget -O forego.tgz https://bin.equinox.io/c/ekMN3bCZFUn/forego-stable-linux-arm.tgz ; fi
-RUN if ["$PLATFORM" = "linux/arm64"] ; then wget -O forego.tgz https://bin.equinox.io/c/ekMN3bCZFUn/forego-stable-linux-arm64.tgz ; fi
+RUN if ["$TARGETPLATFORM" = "linux/amd64"] ; then \
+  wget -O forego.tgz https://bin.equinox.io/c/ekMN3bCZFUn/forego-stable-linux-amd64.tgz && \
+  tar xvf forego.tgz -C /usr/local/bin && \
+  chmod u+x /usr/local/bin/forego ; fi
 
-RUN tar xvf forego.tgz -C /usr/local/bin && \
-	chmod u+x /usr/local/bin/forego
+RUN if ["$TARGETPLATFORM" = "linux/arm/v7"] ; then \
+  wget -O forego.tgz https://bin.equinox.io/c/ekMN3bCZFUn/forego-stable-linux-arm.tgz && \
+  tar xvf forego.tgz -C /usr/local/bin && \
+  chmod u+x /usr/local/bin/forego ; fi
 
-# https://bin.equinox.io/c/ekMN3bCZFUn/forego-stable-linux-amd64.tgz
-RUN chmod u+x /usr/local/bin/forego
+RUN if ["$TARGETPLATFORM" = "linux/arm64"] ; then \
+  wget -O forego.tgz https://bin.equinox.io/c/ekMN3bCZFUn/forego-stable-linux-arm64.tgz && \
+  tar xvf forego.tgz -C /usr/local/bin && \
+  chmod u+x /usr/local/bin/forego ; fi
 
+# Install Docker Gen
 ENV DOCKER_GEN_VERSION 0.7.4
 
-RUN if ["$PLATFORM" = "linux/amd64"] ; then wget -O dockergen.tar.gz https://github.com/jwilder/docker-gen/releases/download/$DOCKER_GEN_VERSION/docker-gen-linux-amd64-$DOCKER_GEN_VERSION.tar.gz ; fi
-RUN if ["$PLATFORM" = "linux/arm/v7"] ; then wget -O dockergen.tar.gz https://github.com/jwilder/docker-gen/releases/download/$DOCKER_GEN_VERSION/docker-gen-linux-armhf-$DOCKER_GEN_VERSION.tar.gz ; fi
-RUN if ["$PLATFORM" = "linux/arm64"] ; then wget -O dockergen.tar.gz https://github.com/jwilder/docker-gen/releases/download/$DOCKER_GEN_VERSION/docker-gen-linux-armhf-$DOCKER_GEN_VERSION.tar.gz ; fi
+RUN if ["$TARGETPLATFORM" = "linux/amd64"] ; then \
+   wget -O dockergen.tar.gz https://github.com/jwilder/docker-gen/releases/download/$DOCKER_GEN_VERSION/docker-gen-linux-amd64-$DOCKER_GEN_VERSION.tar.gz && \
+   tar -C /usr/local/bin -xvzf dockergen.tar.gz && \
+   rm /dockergen.tar.gz ; fi
 
-RUN tar -C /usr/local/bin -xvzf dockergen.tar.gz \
- && rm /dockergen.tar.gz
+RUN if ["$TARGETPLATFORM" = "linux/arm/v7"] ; then \
+   wget -O dockergen.tar.gz https://github.com/jwilder/docker-gen/releases/download/$DOCKER_GEN_VERSION/docker-gen-linux-armhf-$DOCKER_GEN_VERSION.tar.gz && \
+   tar -C /usr/local/bin -xvzf dockergen.tar.gz && \
+   rm /dockergen.tar.gz ; fi
+
+RUN if ["$TARGETPLATFORM" = "linux/arm64"] ; then \
+   wget -O dockergen.tar.gz https://github.com/jwilder/docker-gen/releases/download/$DOCKER_GEN_VERSION/docker-gen-linux-armhf-$DOCKER_GEN_VERSION.tar.gz && \
+   tar -C /usr/local/bin -xvzf dockergen.tar.gz && \
+   rm /dockergen.tar.gz ; fi
 
 COPY network_internal.conf /etc/nginx/
 
