@@ -20,9 +20,9 @@ RUN chmod u+x /usr/local/bin/forego
 
 ENV DOCKER_GEN_VERSION 0.7.4
 
-RUN if ["$TARGET_PLATFORM" = "linux/amd64"] ; then wget -O dockergen.tar.gz https://github.com/jwilder/docker-gen/releases/download/$DOCKER_GEN_VERSION/docker-gen-linux-amd64-$DOCKER_GEN_VERSION.tar.gz ; fi
-RUN if ["$TARGET_PLATFORM" = "linux/arm/v7"] ; then wget -O dockergen.tar.gz https://github.com/jwilder/docker-gen/releases/download/$DOCKER_GEN_VERSION/docker-gen-linux-armhf-$DOCKER_GEN_VERSION.tar.gz ; fi
-RUN if ["$TARGET_PLATFORM" = "linux/arm64"] ; then wget -O dockergen.tar.gz https://github.com/jwilder/docker-gen/releases/download/$DOCKER_GEN_VERSION/docker-gen-linux-armhf-$DOCKER_GEN_VERSION.tar.gz ; fi
+RUN if ["$TARGETPLATFORM" = "linux/amd64"] ; then wget -O dockergen.tar.gz https://github.com/jwilder/docker-gen/releases/download/$DOCKER_GEN_VERSION/docker-gen-linux-amd64-$DOCKER_GEN_VERSION.tar.gz ; fi
+RUN if ["$TARGETPLATFORM" = "linux/arm/v7"] ; then wget -O dockergen.tar.gz https://github.com/jwilder/docker-gen/releases/download/$DOCKER_GEN_VERSION/docker-gen-linux-armhf-$DOCKER_GEN_VERSION.tar.gz ; fi
+RUN if ["$TARGETPLATFORM" = "linux/arm64"] ; then wget -O dockergen.tar.gz https://github.com/jwilder/docker-gen/releases/download/$DOCKER_GEN_VERSION/docker-gen-linux-armhf-$DOCKER_GEN_VERSION.tar.gz ; fi
 
 RUN wget -O dockergen.tar.gz https://github.com/jwilder/docker-gen/releases/download/$DOCKER_GEN_VERSION/docker-gen-linux-amd64-$DOCKER_GEN_VERSION.tar.gz \
  && tar -C /usr/local/bin -xvzf dockergen.tar.gz \
